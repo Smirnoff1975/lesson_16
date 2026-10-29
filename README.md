@@ -88,7 +88,7 @@ usr1@srv2:~/ansible$ nano nginx.yml
 > Делаем первый плейбук по частям, по этому создадим ~/ansible/nginx.yml в котором будет базовые обновления списков установленного ПО и установка nginx
 <img width="663" height="419" alt="image" src="https://github.com/user-attachments/assets/a8264422-36ba-465e-9eac-ba8858d3413a" />
 
-> теперь проверим что целевая машина nginx доступна для ansible, путем запуска команды ping для хоста nginx. Так же при помощи ansible проверим версию ядра и состояние службы firewalld.
+> теперь проверим, что целевая машина nginx доступна для ansible, путем запуска команды ping для хоста nginx. Так же при помощи ansible проверим версию ядра и состояние службы firewalld. После этого запускаем свой первый плейбук.
 
 ```
 usr1@srv2:~/ansible$ ansible nginx -m ping
@@ -149,7 +149,15 @@ changed: [nginx]
 
 PLAY RECAP *********************************************************************
 nginx                      : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+> Задачи отработали успешно. Теперь добавим переменную и шаблон через которую будем настраивать порт слушателя nginx.
+> Создадим шаблон ~/ansible/templates/nginx.conf.j2 переменная nginx_listen_port будет определена в нашем плейбуке в разделе vars.
+<img width="661" height="390" alt="image" src="https://github.com/user-attachments/assets/77a38076-d127-48a6-837c-ef9968537d81" />
+> Теперь добавим задачу в нашем плейбуке для модуля template, попутно определив tags, notify, handlers.
+> notify, handlers нужны для оптимизации процесса выполнения, чтобы не выполнять несколько раз одни и те же команды. Иными словами в notify указаны ссылки на необходимые команды, которые прописаны в разделе handlers, notify сообщает что выполнение определенной команды необходимо для задачи, а handlers в конце выполняет список.
+<img width="662" height="820" alt="image" src="https://github.com/user-attachments/assets/6b2351fe-2bb3-4234-92be-be37a561c591" />
 
+```
 usr1@srv2:~/ansible$
 usr1@srv2:~/ansible$
 usr1@srv2:~/ansible$
@@ -159,29 +167,6 @@ ansible.cfg  ansible-full-reference.cfg  inventory.ini  nginx.yml  site.yml
 usr1@srv2:~/ansible$ mkdir templates
 usr1@srv2:~/ansible$ nano templates/nginx.conf.j2
 usr1@srv2:~/ansible$ nano templates/nginx.conf.j2
-usr1@srv2:~/ansible$ nano nginx.yml
-usr1@srv2:~/ansible$ ansible-playbook nginx.yml
-
-PLAY [NGINX | Install and configure NGINX] *************************************
-
-TASK [Gathering Facts] *********************************************************
-ok: [nginx]
-
-TASK [Update apt cache] ********************************************************
-changed: [nginx]
-
-TASK [NGINX | Install NGINX] ***************************************************
-ok: [nginx]
-
-TASK [NGINX | Create NGINX config file from template] **************************
-changed: [nginx]
-
-RUNNING HANDLER [reload nginx] *************************************************
-changed: [nginx]
-
-PLAY RECAP *********************************************************************
-nginx                      : ok=5    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
-
 usr1@srv2:~/ansible$ nano nginx.yml
 usr1@srv2:~/ansible$ ansible-playbook nginx.yml
 

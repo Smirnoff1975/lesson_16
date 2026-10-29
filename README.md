@@ -87,7 +87,9 @@ usr1@srv2:~/ansible$ nano nginx.yml
 ```
 > Делаем первый плейбук по частям, по этому создадим ~/ansible/nginx.yml в котором будет базовые обновления списков установленного ПО и установка nginx
 <img width="663" height="419" alt="image" src="https://github.com/user-attachments/assets/a8264422-36ba-465e-9eac-ba8858d3413a" />
+
 > теперь проверим что целевая машина nginx доступна для ansible, путем запуска команды ping для хоста nginx. Так же при помощи ansible проверим версию ядра и состояние службы firewalld.
+
 ```
 usr1@srv2:~/ansible$ ansible nginx -m ping
 nginx | SUCCESS => {

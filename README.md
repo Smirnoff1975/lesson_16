@@ -153,8 +153,7 @@ nginx                      : ok=3    changed=2    unreachable=0    failed=0    s
 > Задачи отработали успешно. Теперь добавим переменную и шаблон через которую будем настраивать порт слушателя nginx.
 > Создадим шаблон ~/ansible/templates/nginx.conf.j2 переменная nginx_listen_port будет определена в нашем плейбуке в разделе vars.
 <img width="661" height="390" alt="image" src="https://github.com/user-attachments/assets/77a38076-d127-48a6-837c-ef9968537d81" />
-> Теперь добавим задачу в нашем плейбуке для модуля template, попутно определив tags, notify, handlers.
-> notify, handlers нужны для оптимизации процесса выполнения, чтобы не выполнять несколько раз одни и те же команды. Иными словами в notify указаны ссылки на необходимые команды, которые прописаны в разделе handlers, notify сообщает что выполнение определенной команды необходимо для задачи, а handlers в конце выполняет список.
+> Теперь добавим задачу в нашем плейбуке для модуля template, попутно определив tags, notify, handlers. Notify, handlers нужны для оптимизации процесса выполнения, чтобы не выполнять несколько раз одни и те же команды. Иными словами в notify указаны ссылки на необходимые команды, которые прописаны в разделе handlers, notify сообщает что выполнение определенной команды необходимо для задачи, а handlers в конце выполняет список запрошенных команд.
 <img width="662" height="820" alt="image" src="https://github.com/user-attachments/assets/6b2351fe-2bb3-4234-92be-be37a561c591" />
 
 ```
@@ -168,6 +167,10 @@ usr1@srv2:~/ansible$ mkdir templates
 usr1@srv2:~/ansible$ nano templates/nginx.conf.j2
 usr1@srv2:~/ansible$ nano templates/nginx.conf.j2
 usr1@srv2:~/ansible$ nano nginx.yml
+```
+> Теперь запускаем итоговый плейбук на исполнение.
+
+```
 usr1@srv2:~/ansible$ ansible-playbook nginx.yml
 
 PLAY [NGINX | Install and configure NGINX] *************************************
@@ -218,8 +221,9 @@ Commercial support is available at
 </html>
 usr1@srv2:~/ansible$
 ```
+> Проверим результат. На curl http://192.168.0.150:8080 nginx отвечает, браузер возвращает стандартную страничку
 
-
+<img width="701" height="430" alt="image" src="https://github.com/user-attachments/assets/2fbb8e44-1c86-4016-b84e-0291dc1ff462" />
 
 
 
@@ -535,42 +539,6 @@ nginx | SUCCESS => {
         "WatchdogUSec": "infinity"
     }
 }
-usr1@srv2:~/ansible$ ansible-p
-ansible-playbook  ansible-pull
-usr1@srv2:~/ansible$ ansible-playbook nginx.yml
-ansible.cfg                 -k
-ansible-full-reference.cfg  -K
---ask-become-pass           --key-file
---ask-pass                  -l
---ask-vault-pass            --limit
---ask-vault-password        --list-hosts
--b                          --list-tags
---become                    --list-tasks
---become-method             -M
---become-pass-file          --module-path
---become-password-file      nginx.yml
---become-user               --private-key
--c                          --scp-extra-args
--C                          --sftp-extra-args
---check                     site.yml
---connection                --skip-tags
---connection-password-file  --ssh-common-args
---conn-pass-file            --ssh-extra-args
--D                          --start-at-task
---diff                      --step
--e                          --syntax-check
---extra-vars                -t
--f                          -T
---flush-cache               --tags
---force-handlers            --timeout
---forks                     -u
--h                          --user
---help                      -v
--i                          --vault-id
---inventory                 --vault-pass-file
---inventory-file            --vault-password-file
-inventory.ini               --verbose
--J                          --version
 usr1@srv2:~/ansible$ ansible-playbook nginx.yml
 
 PLAY [NGINX | Install and configure NGINX] *************************************

@@ -25,6 +25,8 @@
 VirtualBox 7.0.10, ВМ1 - Ubuntu 24.04 (srv2 - сервер с Ansible), ВМ2 - Ubuntu 24.04 (nginx - целевая машина)
 
 # Команды и описание действий
+
+> На сервере srv2 где у нас установлен Ansible в домашней папке текущего пользователя создадим папку Ansible. В ней создадим файл - inventory.ini с именами хостов на которых будет происходить установка и настройка ПО и конфигурационный файл ansible.cfg в котором будет ссылка на inventory.ini.
 ```
 usr1@srv2:~/ansible$ ls
 ansible.cfg                 inventory.ini  site.yml

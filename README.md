@@ -27,7 +27,7 @@ VirtualBox 7.0.10, ВМ1 - Ubuntu 24.04 (srv2 - сервер с Ansible), ВМ2 
 # Команды и описание действий
 
 > На сервере srv2 где у нас установлен Ansible в домашней папке текущего пользователя создадим папку Ansible. В ней создадим файл - inventory.ini с именами хостов на которых будет происходить установка и настройка ПО и конфигурационный файл ansible.cfg в котором будет ссылка на inventory.ini.
-> Так как целевая машина nginx развернута при помощи Vagrant то на ней уже есть подходящий пользователь vagrant, его и будем использовать в ansible, так как на целевой машине ssh под него уже настроен, единственно нужно настроить ssh соединения на стороне srv2. Возьмем закрытый ключ для этой машины (E:\Vagrant\ansible\.vagrant\machines\nginx\virtualbox\private_key) и скопируем содержимое через буфер в файл ~/.ssh/nginx_pk. А в файл ~/.ssh/config добавим для хоста nginx информацию о подключении/
+> Так как целевая машина nginx развернута при помощи Vagrant то на ней уже есть подходящий пользователь vagrant, его и будем использовать в ansible, так как на целевой машине ssh под него уже настроен, единственно нужно настроить ssh соединения на стороне srv2. Возьмем закрытый ключ для этой машины от vagrant (E:\Vagrant\ansible\.vagrant\machines\nginx\virtualbox\private_key) и скопируем содержимое через буфер в файл ~/.ssh/nginx_pk. А в файл ~/.ssh/config добавим для хоста nginx информацию о подключении, как описано ниже.
 ```
 usr1@srv2:~/ansible$ ls
 ansible.cfg                 inventory.ini  site.yml
@@ -84,6 +84,11 @@ srv1
 nginx
 usr1@srv2:~/ansible$ nano nginx.yml
 usr1@srv2:~/ansible$ nano nginx.yml
+```
+> Делаем первый плейбук по частям, по этому создадим ~/ansible/nginx.yml в котором будет базовые обновления списков установленного ПО и установка nginx
+<img width="663" height="419" alt="image" src="https://github.com/user-attachments/assets/a8264422-36ba-465e-9eac-ba8858d3413a" />
+> теперь проверим что целевая машина nginx доступна для ansible, путем запуска команды ping для хоста nginx. Так же при помощи ansible проверим версию ядра и состояние службы firewalld.
+```
 usr1@srv2:~/ansible$ ansible nginx -m ping
 nginx | SUCCESS => {
     "ansible_facts": {
@@ -109,7 +114,7 @@ nginx | SUCCESS => {
         "ActiveExitTimestampMonotonic": "0",
         "ActiveState": "inactive",
         "AllowIsolate": "no",
-     ....
+     ...
         "TimeoutAbortUSec": "1min 30s",
         "TimeoutCleanUSec": "infinity",
         "TimeoutStartFailureMode": "terminate",
@@ -127,42 +132,6 @@ nginx | SUCCESS => {
         "WatchdogUSec": "infinity"
     }
 }
-usr1@srv2:~/ansible$ ansible-p
-ansible-playbook  ansible-pull
-usr1@srv2:~/ansible$ ansible-playbook nginx.yml
-ansible.cfg                 -k
-ansible-full-reference.cfg  -K
---ask-become-pass           --key-file
---ask-pass                  -l
---ask-vault-pass            --limit
---ask-vault-password        --list-hosts
--b                          --list-tags
---become                    --list-tasks
---become-method             -M
---become-pass-file          --module-path
---become-password-file      nginx.yml
---become-user               --private-key
--c                          --scp-extra-args
--C                          --sftp-extra-args
---check                     site.yml
---connection                --skip-tags
---connection-password-file  --ssh-common-args
---conn-pass-file            --ssh-extra-args
--D                          --start-at-task
---diff                      --step
--e                          --syntax-check
---extra-vars                -t
--f                          -T
---flush-cache               --tags
---force-handlers            --timeout
---forks                     -u
--h                          --user
---help                      -v
--i                          --vault-id
---inventory                 --vault-pass-file
---inventory-file            --vault-password-file
-inventory.ini               --verbose
--J                          --version
 usr1@srv2:~/ansible$ ansible-playbook nginx.yml
 
 PLAY [NGINX | Install and configure NGINX] *************************************
